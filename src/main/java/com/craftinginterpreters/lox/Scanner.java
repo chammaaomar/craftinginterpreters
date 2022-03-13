@@ -116,8 +116,9 @@ public class Scanner {
             case '\r':
             case '\t': break;
 
-            // string literals in the Lox language are only "-delimited, not '-delimited
-            case '"': string(); break;
+            // string literals in the Lox language are either "-delimited or '-delimited
+            case '"': string('"'); break;
+            case '\'': string('\''); break;
 
             default:
                 if (isDigit(c)) {
@@ -131,9 +132,8 @@ public class Scanner {
         }
     }
 
-    // TODO: we currently only support "-delimited strings, support for '-delimited would be nice
-    private void string() {
-        while (peek() != '"' && !isAtEnd()) {
+    private void string(char delimiter) {
+        while (peek() != delimiter && !isAtEnd()) {
             if (peek() == '\n') line++;
             advance();
         }
