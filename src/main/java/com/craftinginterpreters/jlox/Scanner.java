@@ -199,6 +199,7 @@ class Scanner {
 
 
                 // ignore whitespace
+            case ' ':
             case '\t':
             case '\r':
                 break;
