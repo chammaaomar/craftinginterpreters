@@ -4,14 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="interpreter now... interpreters single expressions with limited ops">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Stmt.java" afterDir="false" />
+    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="implemented print and expression statements; unto var declarations">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Environment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/AstPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/AstPrinter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Expr.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Lox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Lox.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/tool/GenerateAst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/tool/GenerateAst.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,57 +45,6 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.GenerateAst (3)">
-    <configuration name="GenerateAst (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.craftinginterpreters.tool.GenerateAst" />
-      <module name="craftinginterpreters" />
-      <option name="PROGRAM_PARAMETERS" value="src/main/java/com/craftinginterpreters/jlox" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.craftinginterpreters.tool.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="GenerateAst (3)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.craftinginterpreters.tool.GenerateAst" />
-      <module name="craftinginterpreters" />
-      <option name="PROGRAM_PARAMETERS" value="src/main/java/com/craftinginterpreters/jlox" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.craftinginterpreters.tool.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="GenerateAst" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.craftinginterpreters.tool.GenerateAst" />
-      <module name="craftinginterpreters" />
-      <option name="PROGRAM_PARAMETERS" value="src/main/java/com/craftinginterpreters/jlox" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.craftinginterpreters.tool.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.GenerateAst (3)" />
-        <item itemvalue="Application.GenerateAst (2)" />
-        <item itemvalue="Application.GenerateAst" />
-      </list>
-    </recent_temporary>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -127,7 +75,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672631232707</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="implemented print and expression statements; unto var declarations">
+      <created>1672639026069</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1672639026069</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -145,6 +100,7 @@
     <MESSAGE value="implemented scanner, expr class with visitor pattern, ast printer" />
     <MESSAGE value="implemented interpreter for single expression only and subset of grammar" />
     <MESSAGE value="interpreter now... interpreters single expressions with limited ops" />
-    <option name="LAST_COMMIT_MESSAGE" value="interpreter now... interpreters single expressions with limited ops" />
+    <MESSAGE value="implemented print and expression statements; unto var declarations" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented print and expression statements; unto var declarations" />
   </component>
 </project>
