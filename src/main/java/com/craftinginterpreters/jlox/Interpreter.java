@@ -84,6 +84,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitAssignExpr(Expr.Assign assign) {
+        Object value = evaluate(assign.value);
+        env.assign(assign.name, value);
+        return value;
+    }
+
+    @Override
     public Object visitLiteralExpr(Expr.Literal literal) {
         return literal.value;
     }

@@ -107,7 +107,20 @@ public class Parser {
     // expressions: equality (!= ==) < comparison (> >= < <=) < term (+-) < factor (*/) < unary (! -) < primary (literals / atoms)
 
     private Expr expression() {
-        return equality();
+        return assignment();
+    }
+
+    private Expr assignment() {
+        Expr expr = equality();
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expr rhs = assignment();
+            if (expr instanceof Expr.Variable) {
+                return new Expr.Assign(((Expr.Variable) expr).name, rhs);
+            }
+            error(equals, "Must be a valid assignment target.");
+        }
+        return expr;
     }
 
     private Expr equality() {
@@ -178,6 +191,9 @@ public class Parser {
         return new ParseError();
     }
 
+    // method for error-handling when encountering a parsing error in a statement: discard the tokens in the
+    // remainder of the statement, to avoid shotgunning the user with potentially correlated errors
+    // and get to the next statement. This allows the user to discover as many independent errors as possible
     private void synchronize() {
         advance();
         while (!isAtEnd()) {
