@@ -4,7 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Environment {
+    // for nesting scopes, name resolution, variable shadowing ... etc
+    final Environment enclosing;
     private final Map<String, Object> values = new HashMap<>();
+
+    Environment() {
+        enclosing = null;
+    }
+
+    Environment(Environment enclosing) {
+        // create a new local scope nested within the 'enclosing' scope
+        this.enclosing = enclosing;
+    }
 
     void define(String name, Object value) {
         // since we don't check and error out if the variable already exists
@@ -19,6 +30,11 @@ public class Environment {
             return;
         }
 
+        if (enclosing != null) {
+            enclosing.assign(name, value);
+            return;
+        }
+
         throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
     }
 
@@ -27,6 +43,7 @@ public class Environment {
             return values.get(name.lexeme);
         }
 
+        if (enclosing != null) return enclosing.get(name);
         // make it a runtime error as opposed to a compile error, so we can refer to a variable
         // e.g., in a body of a function, as long as we don't evaluate it before actually assigning it
         // or declaring it. This makes implementing recursive functions easier

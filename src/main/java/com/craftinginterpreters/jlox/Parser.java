@@ -47,8 +47,33 @@ public class Parser {
 
     private Stmt statement() {
         if (match(PRINT)) return printStatement();
+        if (match(LEFT_BRACE)) return blockStatement();
+        if (match(IF)) return ifStatement();
 
         return expressionStatement();
+    }
+
+    private Stmt ifStatement() {
+        consume(LEFT_PAREN, "Expect '(' after if statement");
+        Expr condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after if statement condition");
+        Stmt thenBranch = statement();
+        if (match(ELSE)) {
+            Stmt elseBranch = statement();
+            return new Stmt.If(condition, thenBranch, elseBranch);
+        } else {
+            return new Stmt.If(condition, thenBranch, new Stmt.Block(null));
+        }
+    }
+
+    private Stmt blockStatement() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!check(RIGHT_BRACE) && !isAtEnd()) {
+            statements.add(declaration());
+        }
+
+        consume(RIGHT_BRACE, "Expect '}' after block");
+        return new Stmt.Block(statements);
     }
 
     private Stmt printStatement() {

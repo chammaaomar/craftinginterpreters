@@ -61,6 +61,32 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitIfStmt(Stmt.If stmt) {
+        if (isTruthy(evaluate(stmt.condition))) {
+            execute(stmt.thenBranch);
+        } else if (stmt.elseBranch != null) {
+            execute(stmt.elseBranch);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Void visitBlockStmt(Stmt.Block block) {
+        Environment enclosingEnv = this.env;
+        try {
+            this.env = new Environment(this.env);
+            for (Stmt stmt : block.statements) {
+                execute(stmt);
+            }
+        } finally {
+            this.env = enclosingEnv;
+        }
+
+        return null;
+    }
+
+    @Override
     public Void visitVarStmt(Stmt.Var stmt) {
         Object value = null;
         if (stmt.initializer != null) {

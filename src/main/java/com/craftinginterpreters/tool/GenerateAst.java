@@ -19,13 +19,16 @@ public class GenerateAst {
                 "Literal  : Object value",
                 "Unary    : Token operator, Expr right",
                 "Variable : Token name",
-                "Assign   : Token name, Expr value"
+                "Assign   : Token name, Expr value",
+                "Logical  : Expr left, Token operator, Expr right"
         ));
 
         defineAst(outputDir, "Stmt", Arrays.asList(
                 "Expression : Expr expression",
                 "Print      : Expr expression",
-                "Var        : Token name, Expr initializer"
+                "Var        : Token name, Expr initializer",
+                "Block      : List<Stmt> statements",
+                "If         : Expr condition, Stmt thenBranch, Stmt elseBranch"
         ));
     }
 
@@ -59,7 +62,7 @@ public class GenerateAst {
         writer.println("    interface Visitor<R> {");
         for (String type : types) {
             String typeName = type.split(":")[0].trim();
-            writer.println("        R visit" + typeName + baseName + "(" + typeName + " " + typeName.toLowerCase() + ");");
+            writer.println("        R visit" + typeName + baseName + "(" + typeName + " " + baseName.toLowerCase() + ");");
         }
         writer.println("    }");
     }
@@ -68,6 +71,8 @@ public class GenerateAst {
         String path = outputDir + "/" + baseName + ".java";
         PrintWriter writer = new PrintWriter(path, StandardCharsets.UTF_8);
         writer.println("package com.craftinginterpreters.jlox;");
+        writer.println();
+        writer.println("import java.util.List;");
         writer.println();
         writer.println("abstract class " + baseName + " {");
 

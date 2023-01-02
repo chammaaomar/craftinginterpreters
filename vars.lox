@@ -1,0 +1,13 @@
+var a = "global a";
+
+{
+    print a;
+    a = "block 1 a";
+}
+
+{
+    var a = "block 2 a";
+    print a;
+}
+
+print a;
