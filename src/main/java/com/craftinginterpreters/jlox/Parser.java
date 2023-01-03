@@ -1,6 +1,7 @@
 package com.craftinginterpreters.jlox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.craftinginterpreters.jlox.TokenType.*;
@@ -49,14 +50,74 @@ public class Parser {
         if (match(PRINT)) return printStatement();
         if (match(LEFT_BRACE)) return blockStatement();
         if (match(IF)) return ifStatement();
+        if (match(WHILE)) return whileStatement();
+        // we will desugar the for statement, i.e. parse it into while AST node
+        if (match(FOR)) return forStatement();
 
         return expressionStatement();
     }
 
-    private Stmt ifStatement() {
-        consume(LEFT_PAREN, "Expect '(' after if statement");
+    private Stmt whileStatement() {
+        consume(LEFT_PAREN, "Expect '(' after 'while' statement");
         Expr condition = expression();
-        consume(RIGHT_PAREN, "Expect ')' after if statement condition");
+        consume(RIGHT_PAREN, "Expect ')' after 'while' statement condition");
+        Stmt body = statement();
+        return new Stmt.While(condition, body);
+    }
+
+    private Stmt forStatement() {
+        // example: for (var i = 0; i < 10; i = i + 1) print i;
+        consume(LEFT_PAREN, "Expect '(' after 'for' statement");
+        Stmt initializer;
+        if (match(SEMICOLON)) {
+            initializer = null;
+        } else if (match(VAR)) {
+            initializer = varDeclaration();
+        } else {
+            initializer = expressionStatement();
+        }
+
+        // just runs without condition by default
+        Expr condition = new Expr.Literal(true);
+        if (!check(SEMICOLON)) {
+            condition = expression();
+        }
+        consume(SEMICOLON, "Expect ';' after 'for' statement condition");
+
+        Expr increment = null;
+        if (!check(RIGHT_PAREN)) {
+            increment = expression();
+        }
+
+        consume(RIGHT_PAREN, "Expect ')' after 'for' statement");
+        Stmt body = statement();
+
+        // the original body of the 'for' loop, followed by the increment
+        // example desugraing for the following loop: for (var i = 0; i < 10; i = i + 1) print i;
+        /*
+        {
+          var i = 0;
+          while (i < 10) {
+            print i;
+            i = i + 1;
+          }
+        }
+        */
+        body = new Stmt.Block(Arrays.asList(
+                body,
+                new Stmt.Expression(increment)
+        ));
+
+        return new Stmt.Block(Arrays.asList(
+              initializer,
+                new Stmt.While(condition, body)
+        ));
+    }
+
+    private Stmt ifStatement() {
+        consume(LEFT_PAREN, "Expect '(' after 'if' statement");
+        Expr condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after 'if' statement condition");
         Stmt thenBranch = statement();
         if (match(ELSE)) {
             Stmt elseBranch = statement();
