@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="parse and interpret assignment expressions">
-      <change afterPath="$PROJECT_DIR$/vars.lox" afterDir="false" />
+    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="implemented if else, we're getting turing-completeness soon">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Environment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Expr.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Stmt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Stmt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/tool/GenerateAst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/tool/GenerateAst.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +117,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672692706822</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="implemented if else, we're getting turing-completeness soon">
+      <created>1672699755742</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1672699755742</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -143,6 +145,7 @@
     <MESSAGE value="implemented print and expression statements; unto var declarations" />
     <MESSAGE value="basic variable declaration in a single global scope" />
     <MESSAGE value="parse and interpret assignment expressions" />
-    <option name="LAST_COMMIT_MESSAGE" value="parse and interpret assignment expressions" />
+    <MESSAGE value="implemented if else, we're getting turing-completeness soon" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented if else, we're getting turing-completeness soon" />
   </component>
 </project>
