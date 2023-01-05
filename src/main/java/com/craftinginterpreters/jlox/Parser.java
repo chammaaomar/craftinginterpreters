@@ -190,7 +190,17 @@ public class Parser {
     // our recursive descent parser starts with parsing the lowest precedence expressions
     // and in order to evaluate the lowest precedence expression it has to evaluate any
     // higher-precedence subexpressions. The precedence order in parsing tokens into
-    // expressions: equality (!= ==) < comparison (> >= < <=) < term (+-) < factor (*/) < unary (! -) < primary (literals / atoms)
+    // expressions:
+    // assignment
+    // logical or
+    // logical and
+    // equality tests
+    // comparisons
+    // addition, subtraction
+    // multiplication, division
+    // unary
+    // function calls
+    // keywords, identifiers, literals, parenthesized expressions
 
     private Expr expression() {
         return assignment();
