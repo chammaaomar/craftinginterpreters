@@ -307,7 +307,7 @@ public class Parser {
             return new Expr.Call(callee, paren, args);
         }
 
-        return primary();
+        return callee;
     }
 
     private Token consume(TokenType type, String message) {
