@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="implemented logical and / or">
+    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="implemented for loop without touching the interpreter by parsing to while AST nodes">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/LoxCallable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Expr.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Stmt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Stmt.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/tool/GenerateAst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/tool/GenerateAst.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,10 +45,11 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.customizations"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.Lox">
+  <component name="RunManager" selected="Application.GenerateAst (4)">
     <configuration name="GenerateAst (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.craftinginterpreters.tool.GenerateAst" />
       <module name="craftinginterpreters" />
@@ -63,6 +65,20 @@
       </method>
     </configuration>
     <configuration name="GenerateAst (3)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.craftinginterpreters.tool.GenerateAst" />
+      <module name="craftinginterpreters" />
+      <option name="PROGRAM_PARAMETERS" value="src/main/java/com/craftinginterpreters/jlox" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.craftinginterpreters.tool.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GenerateAst (4)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.craftinginterpreters.tool.GenerateAst" />
       <module name="craftinginterpreters" />
       <option name="PROGRAM_PARAMETERS" value="src/main/java/com/craftinginterpreters/jlox" />
@@ -106,6 +122,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.GenerateAst (4)" />
         <item itemvalue="Application.Lox" />
         <item itemvalue="Application.GenerateAst (3)" />
         <item itemvalue="Application.GenerateAst (2)" />
@@ -178,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672718228681</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="implemented for loop without touching the interpreter by parsing to while AST nodes">
+      <created>1672724425175</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1672724425175</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -201,6 +225,7 @@
     <MESSAGE value="parse and interpret assignment expressions" />
     <MESSAGE value="implemented if else, we're getting turing-completeness soon" />
     <MESSAGE value="implemented logical and / or" />
-    <option name="LAST_COMMIT_MESSAGE" value="implemented logical and / or" />
+    <MESSAGE value="implemented for loop without touching the interpreter by parsing to while AST nodes" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented for loop without touching the interpreter by parsing to while AST nodes" />
   </component>
 </project>

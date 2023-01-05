@@ -20,7 +20,9 @@ public class GenerateAst {
                 "Unary    : Token operator, Expr right",
                 "Variable : Token name",
                 "Assign   : Token name, Expr value",
-                "Logical  : Expr left, Token operator, Expr right"
+                "Logical  : Expr left, Token operator, Expr right",
+                // store the token of the closing parenthesis to report a runtime error
+                "Call     : Expr callee, Token paren, List<Expr> arguments"
         ));
 
         defineAst(outputDir, "Stmt", Arrays.asList(

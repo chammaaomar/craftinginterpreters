@@ -280,12 +280,34 @@ public class Parser {
     private Expr unary() {
         if (match(MINUS, BANG)) {
             Token operator = previous();
-            Expr right = primary();
+            Expr right = unary();
             return new Expr.Unary(operator, right);
         } else {
-            return primary();
+            return call();
         }
 
+    }
+
+    private Expr call() {
+        Expr callee = primary();
+        if (match(LEFT_PAREN)) {
+            // parse the arguments
+            List<Expr> args = new ArrayList<>();
+            if (!check(RIGHT_PAREN)) {
+                // only try to parse arguments if the next character isn't ')'
+                args.add(expression());
+                while (match(COMMA)) {
+                    if (args.size() >= 255) {
+                        error(peek(), "Can't have more than 255 function arguments");
+                    }
+                    args.add(expression());
+                }
+            }
+            Token paren = consume(RIGHT_PAREN, "Expect ')' after function call");
+            return new Expr.Call(callee, paren, args);
+        }
+
+        return primary();
     }
 
     private Token consume(TokenType type, String message) {

@@ -1,10 +1,31 @@
 package com.craftinginterpreters.jlox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
-    private Environment env = new Environment();
+    private Environment globals = new Environment();
+    private Environment env = globals;
+
+    Interpreter() {
+        globals.define("clock", new LoxCallable() {
+            @Override
+            public int arity() {
+                return 0;
+            }
+
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments) {
+                return (double)System.currentTimeMillis() / 1000.0;
+            }
+
+            @Override
+            public String toString() {
+                return "<native fn>";
+            }
+        });
+    }
 
     public void interpret(List<Stmt> statements) {
         try {
@@ -164,6 +185,26 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
 
         return null;
+    }
+
+    @Override
+    public Object visitCallExpr(Expr.Call call) {
+        Object callee = evaluate(call.callee);
+
+        if (!(callee instanceof LoxCallable)) {
+            throw new RuntimeError(call.paren, "Can only call functions and classes");
+        }
+        List<Object> args = new ArrayList<>();
+        for (Expr arg : call.arguments) {
+            args.add(evaluate(arg));
+        }
+
+        LoxCallable func = (LoxCallable) callee;
+
+        if (args.size() != func.arity()) {
+            throw new RuntimeError(call.paren, "Expected " + func.arity() + " arguments, got " + args.size() + " arguments.");
+        }
+        return func.call(this, args);
     }
 
     @Override
