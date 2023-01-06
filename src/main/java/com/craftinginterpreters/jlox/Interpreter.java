@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
-    private Environment globals = new Environment();
+    public Environment globals = new Environment();
     private Environment env = globals;
 
     Interpreter() {
@@ -82,6 +82,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitFunctionStmt(Stmt.Function function) {
+        LoxFunction functionObject = new LoxFunction(function);
+        env.define(function.name.lexeme, functionObject);
+        return null;
+    }
+
+    @Override
     public Void visitIfStmt(Stmt.If stmt) {
         if (isTruthy(evaluate(stmt.condition))) {
             execute(stmt.thenBranch);
@@ -92,18 +99,21 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
-    @Override
-    public Void visitBlockStmt(Stmt.Block block) {
+    public void executeBlock(List<Stmt> statements, Environment env) {
         Environment enclosingEnv = this.env;
         try {
-            this.env = new Environment(this.env);
-            for (Stmt stmt : block.statements) {
+            this.env = env;
+            for (Stmt stmt : statements) {
                 execute(stmt);
             }
         } finally {
             this.env = enclosingEnv;
         }
+    }
 
+    @Override
+    public Void visitBlockStmt(Stmt.Block block) {
+        executeBlock(block.statements, this.env);
         return null;
     }
 
