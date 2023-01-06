@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="implemented function declaration parsing">
-      <change afterPath="$PROJECT_DIR$/function_call.lox" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/LoxFunction.java" afterDir="false" />
+    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="Function execution works! But no 'return' yet lol">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" afterDir="false" />
     </list>
@@ -168,7 +166,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673046253722</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Function execution works! But no 'return' yet lol">
+      <created>1673047828947</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1673047828947</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -196,7 +201,8 @@
     <MESSAGE value="ah single line bugs my favorite" />
     <MESSAGE value="comment" />
     <MESSAGE value="implemented function declaration parsing" />
-    <option name="LAST_COMMIT_MESSAGE" value="implemented function declaration parsing" />
+    <MESSAGE value="Function execution works! But no 'return' yet lol" />
+    <option name="LAST_COMMIT_MESSAGE" value="Function execution works! But no 'return' yet lol" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

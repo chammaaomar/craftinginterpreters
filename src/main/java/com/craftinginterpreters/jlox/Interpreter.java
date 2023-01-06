@@ -99,10 +99,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
-    public void executeBlock(List<Stmt> statements, Environment env) {
+    public void executeBlock(List<Stmt> statements, Environment blockEnv) {
         Environment enclosingEnv = this.env;
         try {
-            this.env = env;
+            this.env = blockEnv;
             for (Stmt stmt : statements) {
                 execute(stmt);
             }
@@ -113,7 +113,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitBlockStmt(Stmt.Block block) {
-        executeBlock(block.statements, this.env);
+        executeBlock(block.statements, new Environment(this.env));
         return null;
     }
 
