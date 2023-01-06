@@ -29,11 +29,37 @@ public class Parser {
     private Stmt declaration() {
         try {
             if (match(VAR)) return varDeclaration();
+            if (match(FUN)) return function("function");
             return statement();
         } catch (ParseError error) {
             synchronize();
             return null;
         }
+    }
+
+    // can't quite use the Stmt.Function to represent a Lox Function in the Java Runtime
+    // because it doesn't implement the LoxCallable interface. Nor do we want a leaky abstraction
+    // where the parser has to worry about interpreter or runtime concerns,
+    // so we'll wrap the Stmt.Function in another class, LoxFunction, which implements the LoxCallable
+    // interface
+    private Stmt function(String kind) {
+        Token name = consume(IDENTIFIER, "Expect name as part of " + kind + " declaration.");
+        consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
+        List<Token> parameters = null;
+        if (!check(RIGHT_PAREN)) {
+            parameters = new ArrayList<>();
+            // parse parameters, if any
+            do {
+                if (parameters.size() > 255) {
+                    error(peek(), kind + " declaration can't have more than 255 parameters");
+                }
+                parameters.add(consume(IDENTIFIER, "Expect parameter name"));
+            } while (match(COMMA));
+        }
+        consume(RIGHT_PAREN, "Expect ')' after parameter list of " + kind + "declaration.");
+        consume(LEFT_BRACE, "Expect '{' before " + kind + " body.");
+        List<Stmt> body = block();
+        return new Stmt.Function(name, parameters, body);
     }
 
     private Stmt varDeclaration() {
@@ -48,7 +74,7 @@ public class Parser {
 
     private Stmt statement() {
         if (match(PRINT)) return printStatement();
-        if (match(LEFT_BRACE)) return blockStatement();
+        if (match(LEFT_BRACE)) return new Stmt.Block(block());
         if (match(IF)) return ifStatement();
         if (match(WHILE)) return whileStatement();
         // we will desugar the for statement, i.e. parse it into while AST node
@@ -127,14 +153,14 @@ public class Parser {
         }
     }
 
-    private Stmt blockStatement() {
+    private List<Stmt> block() {
         List<Stmt> statements = new ArrayList<>();
         while (!check(RIGHT_BRACE) && !isAtEnd()) {
             statements.add(declaration());
         }
 
         consume(RIGHT_BRACE, "Expect '}' after block");
-        return new Stmt.Block(statements);
+        return statements;
     }
 
     private Stmt printStatement() {
