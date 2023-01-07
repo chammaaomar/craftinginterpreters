@@ -2,13 +2,13 @@
 #include "memory.h"
 
 // pass by pointer since we need to modify it
-void initChunk(Chunk *chunk)
+void init_chunk(Chunk *chunk)
 {
     chunk->count = 0;
     chunk->capacity = 0;
     chunk->code = NULL;
 }
-void writeChunk(Chunk *chunk, uint8_t byte)
+void write_chunk(Chunk *chunk, uint8_t byte)
 {
     if (chunk->count >= chunk->capacity)
     {
@@ -21,8 +21,8 @@ void writeChunk(Chunk *chunk, uint8_t byte)
     chunk->count++;
 }
 
-void freeChunk(Chunk *chunk)
+void free_chunk(Chunk *chunk)
 {
     FREE_ARRAY(uint8_t, chunk->code, chunk->capacity);
-    initChunk(chunk);
+    init_chunk(chunk);
 }
