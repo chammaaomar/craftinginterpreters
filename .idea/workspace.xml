@@ -4,17 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="fix confusion with scopes">
-      <change afterPath="$PROJECT_DIR$/fib_func.lox" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Return.java" afterDir="false" />
+    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="implemented return statements and fixed a couple of bugs with fibonacci sequence test">
+      <change afterPath="$PROJECT_DIR$/closure.lox" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Lox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Lox.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/LoxFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/LoxFunction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Scanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Scanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Stmt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Stmt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/tool/GenerateAst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/tool/GenerateAst.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +66,7 @@
     <configuration name="Lox" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.craftinginterpreters.jlox.Lox" />
       <module name="craftinginterpreters" />
-      <option name="PROGRAM_PARAMETERS" value="fib_func.lox" />
+      <option name="PROGRAM_PARAMETERS" value="closure.lox" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.craftinginterpreters.jlox.*" />
@@ -203,7 +198,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673048037195</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="implemented return statements and fixed a couple of bugs with fibonacci sequence test">
+      <created>1673051817259</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1673051817259</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -233,32 +235,15 @@
     <MESSAGE value="implemented function declaration parsing" />
     <MESSAGE value="Function execution works! But no 'return' yet lol" />
     <MESSAGE value="fix confusion with scopes" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix confusion with scopes" />
+    <MESSAGE value="implemented return statements and fixed a couple of bugs with fibonacci sequence test" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented return statements and fixed a couple of bugs with fibonacci sequence test" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java</url>
-          <line>142</line>
-          <properties class="com.craftinginterpreters.jlox.Parser" method="returnStatement">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java</url>
-          <line>152</line>
-          <properties class="com.craftinginterpreters.jlox.Parser" method="ifStatement">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java</url>
-          <line>289</line>
+          <line>288</line>
           <properties class="com.craftinginterpreters.jlox.Parser" method="comparison">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
@@ -267,7 +252,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java</url>
-          <line>398</line>
+          <line>396</line>
           <properties class="com.craftinginterpreters.jlox.Parser" method="primary">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
@@ -276,12 +261,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java</url>
-          <line>402</line>
+          <line>400</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java</url>
-          <line>408</line>
+          <line>406</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>

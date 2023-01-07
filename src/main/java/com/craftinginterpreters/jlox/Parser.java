@@ -45,9 +45,8 @@ public class Parser {
     private Stmt function(String kind) {
         Token name = consume(IDENTIFIER, "Expect name as part of " + kind + " declaration.");
         consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
-        List<Token> parameters = null;
+        List<Token> parameters = new ArrayList<>();
         if (!check(RIGHT_PAREN)) {
-            parameters = new ArrayList<>();
             // parse parameters, if any
             do {
                 if (parameters.size() > 255) {
@@ -338,10 +337,9 @@ public class Parser {
         Expr callee = primary();
         if (match(LEFT_PAREN)) {
             // parse the arguments
-            List<Expr> args = null;
+            List<Expr> args = new ArrayList<>();
             if (!check(RIGHT_PAREN)) {
                 // only try to parse arguments if the next character isn't ')'
-                args = new ArrayList<>();
                 args.add(expression());
                 while (match(COMMA)) {
                     if (args.size() >= 255) {

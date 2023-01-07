@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
-    public Environment globals = new Environment();
+    private Environment globals = new Environment();
     private Environment env = globals;
 
     Interpreter() {
@@ -93,7 +93,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitFunctionStmt(Stmt.Function function) {
-        LoxFunction functionObject = new LoxFunction(function);
+        LoxFunction functionObject = new LoxFunction(function, env);
         env.define(function.name.lexeme, functionObject);
         return null;
     }
