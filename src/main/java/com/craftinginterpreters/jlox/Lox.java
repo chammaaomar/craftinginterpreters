@@ -11,6 +11,7 @@ import java.util.List;
 public class Lox {
 
     private static final Interpreter interpreter = new Interpreter();
+    private static final Resolver resolver = new Resolver(interpreter);
 
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
@@ -53,6 +54,12 @@ public class Lox {
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
 
+        // don't run the resolver or the interpreter in case of any parsing (syntactic) errors
+        if (hadError) return;
+
+        resolver.resolve(statements);
+
+        // don't run the interpreter in case of any resolution errors;
         if (hadError) return;
 
         interpreter.interpret(statements);

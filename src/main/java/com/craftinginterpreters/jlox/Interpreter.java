@@ -1,12 +1,20 @@
 package com.craftinginterpreters.jlox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     private Environment globals = new Environment();
     private Environment env = globals;
+    private final Map<Expr, Integer> locals = new HashMap<>();
+
+    // we could've stored the static name resolution information in the AST nodes themselves
+    public void resolve(Expr expr, int depth) {
+        locals.put(expr, depth);
+    }
 
     Interpreter() {
         globals.define("clock", new LoxCallable() {
@@ -161,7 +169,17 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Object visitAssignExpr(Expr.Assign assign) {
         Object value = evaluate(assign.value);
-        env.assign(assign.name, value);
+        Integer depth = locals.get(assign);
+
+        if (depth == null) {
+            globals.assign(assign.name, value);
+        } else {
+            Environment scope = this.env;
+            for (int i = 0; i < depth; i++) {
+                scope = scope.enclosing;
+            }
+            scope.assign(assign.name, value);
+        }
         return value;
     }
 
@@ -183,9 +201,24 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return literal.value;
     }
 
+    private Object lookUpVariable(Token name, Expr expr) {
+        Integer depth = locals.get(expr);
+        if (depth == null) {
+            return globals.get(name);
+        }
+
+        Environment scope = this.env;
+
+        for (int i = 0; i < depth; i++) {
+            scope = scope.enclosing;
+        }
+
+        return scope.get(name);
+    }
+
     @Override
     public Object visitVariableExpr(Expr.Variable variable) {
-        return env.get(variable.name);
+        return lookUpVariable(variable.name, variable);
     }
 
     @Override

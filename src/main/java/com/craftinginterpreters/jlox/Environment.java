@@ -30,11 +30,6 @@ public class Environment {
             return;
         }
 
-        if (enclosing != null) {
-            enclosing.assign(name, value);
-            return;
-        }
-
         throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
     }
 
@@ -43,7 +38,6 @@ public class Environment {
             return values.get(name.lexeme);
         }
 
-        if (enclosing != null) return enclosing.get(name);
         // make it a runtime error as opposed to a compile error, so we can refer to a variable
         // e.g., in a body of a function, as long as we don't evaluate it before actually assigning it
         // or declaring it. This makes implementing recursive functions easier

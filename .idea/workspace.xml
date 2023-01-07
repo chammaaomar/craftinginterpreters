@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="implemented return statements and fixed a couple of bugs with fibonacci sequence test">
-      <change afterPath="$PROJECT_DIR$/closure.lox" afterDir="false" />
+    <list default="true" id="39b40ce0-a226-4529-88e1-c39f950e0812" name="Changes" comment="I'm spoiled by typescript's non-null types, null pointer exceptions suck in plain java">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/FunctionType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Resolver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Environment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Interpreter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/LoxFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/LoxFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Lox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Lox.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +21,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -48,7 +50,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.customizations&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.Lox">
+  <component name="RunManager">
     <configuration name="GenerateAst" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.craftinginterpreters.tool.GenerateAst" />
       <module name="craftinginterpreters" />
@@ -205,7 +207,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673051817259</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="I'm spoiled by typescript's non-null types, null pointer exceptions suck in plain java">
+      <created>1673052755345</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1673052755345</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -236,41 +245,10 @@
     <MESSAGE value="Function execution works! But no 'return' yet lol" />
     <MESSAGE value="fix confusion with scopes" />
     <MESSAGE value="implemented return statements and fixed a couple of bugs with fibonacci sequence test" />
-    <option name="LAST_COMMIT_MESSAGE" value="implemented return statements and fixed a couple of bugs with fibonacci sequence test" />
+    <MESSAGE value="I'm spoiled by typescript's non-null types, null pointer exceptions suck in plain java" />
+    <option name="LAST_COMMIT_MESSAGE" value="I'm spoiled by typescript's non-null types, null pointer exceptions suck in plain java" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java</url>
-          <line>288</line>
-          <properties class="com.craftinginterpreters.jlox.Parser" method="comparison">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java</url>
-          <line>396</line>
-          <properties class="com.craftinginterpreters.jlox.Parser" method="primary">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java</url>
-          <line>400</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/craftinginterpreters/jlox/Parser.java</url>
-          <line>406</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="com.craftinginterpreters.jlox.Parser" memberName="current" />
