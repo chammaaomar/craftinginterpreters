@@ -82,6 +82,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitReturnStmt(Stmt.Return stmt) {
+        Object value = stmt.expr != null ? evaluate(stmt.expr) : null;
+
+        // technically we can throw anything! Not just exceptions
+        // so we use this to escape any statements being executed, no matter how deeply nested
+        // inside the function!
+        throw new Return(value);
+    }
+
+    @Override
     public Void visitFunctionStmt(Stmt.Function function) {
         LoxFunction functionObject = new LoxFunction(function);
         env.define(function.name.lexeme, functionObject);

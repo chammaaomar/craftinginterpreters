@@ -79,7 +79,7 @@ public class Parser {
         if (match(WHILE)) return whileStatement();
         // we will desugar the for statement, i.e. parse it into while AST node
         if (match(FOR)) return forStatement();
-
+        if (match(RETURN)) return returnStatement();
         return expressionStatement();
     }
 
@@ -140,6 +140,16 @@ public class Parser {
         ));
     }
 
+    private Stmt returnStatement() {
+        Token keyword = previous();
+        Expr value = null;
+        if (!check(SEMICOLON)) {
+            value = expression();
+        }
+        consume(SEMICOLON, "Expect ';' after return value.");
+        return new Stmt.Return(keyword, value);
+    }
+
     private Stmt ifStatement() {
         consume(LEFT_PAREN, "Expect '(' after 'if' statement");
         Expr condition = expression();
@@ -149,7 +159,7 @@ public class Parser {
             Stmt elseBranch = statement();
             return new Stmt.If(condition, thenBranch, elseBranch);
         } else {
-            return new Stmt.If(condition, thenBranch, new Stmt.Block(null));
+            return new Stmt.If(condition, thenBranch, null);
         }
     }
 
@@ -328,9 +338,10 @@ public class Parser {
         Expr callee = primary();
         if (match(LEFT_PAREN)) {
             // parse the arguments
-            List<Expr> args = new ArrayList<>();
+            List<Expr> args = null;
             if (!check(RIGHT_PAREN)) {
                 // only try to parse arguments if the next character isn't ')'
+                args = new ArrayList<>();
                 args.add(expression());
                 while (match(COMMA)) {
                     if (args.size() >= 255) {
