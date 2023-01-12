@@ -18,10 +18,11 @@ typedef struct
     int count;
     uint8_t *code;
     ValueArray constants;
+    int *lines;
 } Chunk;
 
 void init_chunk(Chunk *chunk);
-void write_chunk(Chunk *chunk, uint8_t byte);
+void write_chunk(Chunk *chunk, uint8_t byte, int line);
 void free_chunk(Chunk *chunk);
 uint8_t add_constant_to_chunk(Chunk *chunk, Value constant);
 
