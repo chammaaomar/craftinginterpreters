@@ -29,6 +29,18 @@ int constant_instruction(const char *name, Chunk *chunk, int offset)
     return offset + 2;
 }
 
+int constant_long_instruction(const char *name, Chunk *chunk, int offset)
+{
+    uint8_t constant_ptr_lowest_byte = chunk->code[offset + 1];
+    uint8_t constant_ptr_middle_byte = chunk->code[offset + 1];
+    uint8_t constant_ptr_highest_byte = chunk->code[offset + 1];
+    int constant_ptr = constant_ptr_lowest_byte | constant_ptr_middle_byte | constant_ptr_highest_byte;
+    printf("%-16s %4d '", name, constant_ptr);
+    print_value(chunk->constants.values[constant_ptr]);
+    printf("'\n");
+    return offset + 4;
+}
+
 int disassemble_instruction(Chunk *chunk, int offset)
 {
     printf("%04d ", offset);

@@ -11,13 +11,13 @@ int main(int argc, const char *argv[])
     Chunk chunk;
     init_chunk(&chunk);
 
-    uint8_t constant = add_constant_to_chunk(&chunk, 1.2);
+    int constant = add_constant_to_chunk(&chunk, 1.2);
     write_chunk(&chunk, OP_CONSTANT, 123);
     write_chunk(&chunk, constant, 123);
 
     write_chunk(&chunk, OP_RETURN, 123);
 
-    uint8_t second_constant = add_constant_to_chunk(&chunk, 2.4);
+    int second_constant = add_constant_to_chunk(&chunk, 2.4);
     write_chunk(&chunk, OP_CONSTANT, 127);
     write_chunk(&chunk, second_constant, 127);
 

@@ -37,8 +37,30 @@ void free_chunk(Chunk *chunk)
 // adds a constant to the constant dynamic array of chunk (which is a representation of a clox program; instructions and data)
 // this will be called by the VM once implemented
 // returns the index at which the constant was added for later easy access
-uint8_t add_constant_to_chunk(Chunk *chunk, Value constant)
+int add_constant_to_chunk(Chunk *chunk, Value constant)
 {
     write_value_array(&chunk->constants, constant);
     return chunk->constants.count - 1;
+}
+
+void write_constant(Chunk *chunk, Value value, int line)
+{
+    if (chunk->constants.count < 0b11111111)
+    {
+        write_chunk(chunk, OP_CONSTANT, line);
+        // in this branch, constant_ptr, the index into the constants pool
+        // fits into a single byte
+        int constant_ptr = add_constant_to_chunk(chunk, value);
+        write_chunk(chunk, constant_ptr, line);
+    }
+    else
+    {
+        // the index into the constants pool doesn't fit into a single byte
+        // let's fit it into 24-bits or 3 bytes
+        write_chunk(chunk, OP_CONSTANT_LONG, line);
+        int constant_ptr = add_constant_to_chunk(chunk, value);
+        write_chunk(chunk, constant_ptr & 0b11111111, line);
+        write_chunk(chunk, constant_ptr & (0b11111111 << 8), line);
+        write_chunk(chunk, constant_ptr & (0b11111111 << 16), line);
+    }
 }

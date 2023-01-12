@@ -7,6 +7,10 @@
 typedef enum
 {
     OP_CONSTANT,
+    // constant long instruction allows us to load constants with index in the constant
+    // pool that doesn't fit into a single byte. A single byte only allows us 255 constants
+    // in a chunk (program), whereas with this instruction, we allow 3 bytes for the index.
+    OP_CONSTANT_LONG,
     OP_RETURN,
 } OpCode;
 
@@ -24,6 +28,7 @@ typedef struct
 void init_chunk(Chunk *chunk);
 void write_chunk(Chunk *chunk, uint8_t byte, int line);
 void free_chunk(Chunk *chunk);
-uint8_t add_constant_to_chunk(Chunk *chunk, Value constant);
+int add_constant_to_chunk(Chunk *chunk, Value constant);
+void write_constant(Chunk *chunk, Value value, int line);
 
 #endif
