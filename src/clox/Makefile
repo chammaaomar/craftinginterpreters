@@ -1,2 +1,2 @@
-clox: main.c memory.c chunk.c debug.c
-	gcc -o clox main.c memory.c chunk.c debug.c -I.
+clox: main.c memory.c chunk.c debug.c value.c
+	gcc -o clox main.c memory.c chunk.c debug.c value.c -I.

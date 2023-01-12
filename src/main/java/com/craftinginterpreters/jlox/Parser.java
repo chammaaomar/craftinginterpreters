@@ -30,6 +30,7 @@ public class Parser {
         try {
             if (match(VAR)) return varDeclaration();
             if (match(FUN)) return function("function");
+            if (match(CLASS)) return classDeclaration();
             return statement();
         } catch (ParseError error) {
             synchronize();
@@ -37,12 +38,24 @@ public class Parser {
         }
     }
 
+    private Stmt classDeclaration() {
+        Token className = consume(IDENTIFIER, "Expect name as part of class declaration.");
+        consume(LEFT_BRACE, "Expect '{' before class body.");
+        List<Stmt.Function> methods = new ArrayList<>();
+        while (!check(RIGHT_BRACE) && !isAtEnd()) {
+            Stmt.Function method = function("method");
+            methods.add(method);
+        }
+        consume(RIGHT_BRACE, "Expect '}' after class body.");
+        return new Stmt.Class(className, methods);
+    }
+
     // can't quite use the Stmt.Function to represent a Lox Function in the Java Runtime
     // because it doesn't implement the LoxCallable interface. Nor do we want a leaky abstraction
     // where the parser has to worry about interpreter or runtime concerns,
     // so we'll wrap the Stmt.Function in another class, LoxFunction, which implements the LoxCallable
     // interface
-    private Stmt function(String kind) {
+    private Stmt.Function function(String kind) {
         Token name = consume(IDENTIFIER, "Expect name as part of " + kind + " declaration.");
         consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
         List<Token> parameters = new ArrayList<>();

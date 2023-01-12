@@ -1,0 +1,7 @@
+class BostonDoughnut {
+    isTheBest() {
+        return true;
+    }
+}
+
+print BostonDoughnut;

@@ -70,6 +70,17 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitClassStmt(Stmt.Class stmt) {
+        declare(stmt.name);
+        define(stmt.name);
+        for (Stmt.Function method : stmt.methods) {
+            visitFunctionStmt(method);
+        }
+
+        return null;
+    }
+
     public Void visitFunctionStmt(Stmt.Function stmt) {
         // define the function eagerly, to allow recursion
         // as opposed to variables where we resolve the expression defining the variable
@@ -77,7 +88,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         declare(stmt.name);
         define(stmt.name);
 
-        resolveFunction(stmt, FunctionType.FUNCTION);
+//        resolveFunction(stmt, FunctionType.FUNCTION);
 
         return null;
     }
