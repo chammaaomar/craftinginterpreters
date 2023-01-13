@@ -18,9 +18,19 @@ int main(int argc, const char *argv[])
     write_chunk(&chunk, OP_CONSTANT, 123);
     write_chunk(&chunk, constant, 123);
 
-    int second_constant = add_constant_to_chunk(&chunk, 2.4);
-    write_chunk(&chunk, OP_CONSTANT, 127);
-    write_chunk(&chunk, second_constant, 127);
+    int second_constant = add_constant_to_chunk(&chunk, 3.4);
+    write_chunk(&chunk, OP_CONSTANT, 123);
+    write_chunk(&chunk, second_constant, 123);
+
+    write_chunk(&chunk, OP_ADD, 123);
+
+    int third_constant = add_constant_to_chunk(&chunk, 5.6);
+    write_chunk(&chunk, OP_CONSTANT, 123);
+    write_chunk(&chunk, third_constant, 123);
+
+    write_chunk(&chunk, OP_DIVIDE, 123);
+
+    write_chunk(&chunk, OP_NEGATE, 123);
 
     write_chunk(&chunk, OP_RETURN, 123);
 

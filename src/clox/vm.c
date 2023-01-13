@@ -34,6 +34,19 @@ static InterpretResult run()
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
 #define READ_CONSTANT_LONG() (vm.chunk->constants.values[READ_BYTE() | READ_BYTE() | READ_BYTE()])
+// BINARY_OP uses a block to ensure that have the same scope.
+// notice that in Lox, we define order of evaluation from left to right
+// so for example if we want to calculate expr_a + expr_b, we evaluate
+// first expr_a, push it on the stack, then evaluate expr_b and push it on the stack
+// so expr_a is actually popped() later, first-in-last-out order
+// also op like + isn't first class, but the C preprocessor only cares about text tokens
+// not C language tokens
+#define BINARY_OP(op)        \
+    {                        \
+        Value right = pop(); \
+        Value left = pop();  \
+        push(left op right); \
+    }
 
     for (;;)
     {
@@ -69,12 +82,30 @@ static InterpretResult run()
             Value constant = READ_CONSTANT_LONG();
             break;
         }
+        case OP_NEGATE:
+        {
+            push(-pop());
+            break;
+        }
+        case OP_ADD:
+            BINARY_OP(+)
+            break;
+        case OP_SUBTRACT:
+            BINARY_OP(-)
+            break;
+        case OP_MULTIPLY:
+            BINARY_OP(*)
+            break;
+        case OP_DIVIDE:
+            BINARY_OP(/)
+            break;
         }
     }
 
 #undef READ_BYTE
 #undef READ_CONSTANT
 #undef READ_CONSTANT_LONG
+#undef BINARY_OP
 }
 
 InterpretResult interpret(Chunk *chunk)

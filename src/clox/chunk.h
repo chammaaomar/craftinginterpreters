@@ -11,6 +11,11 @@ typedef enum
     // pool that doesn't fit into a single byte. A single byte only allows us 255 constants
     // in a chunk (program), whereas with this instruction, we allow 3 bytes for the index.
     OP_CONSTANT_LONG,
+    OP_NEGATE,
+    OP_ADD,
+    OP_SUBTRACT,
+    OP_MULTIPLY,
+    OP_DIVIDE,
     OP_RETURN,
 } OpCode;
 
