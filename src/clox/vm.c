@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "vm.h"
 #include "debug.h"
+#include "compiler.h"
 
 // vm is a single, global instance
 VM vm;
@@ -34,12 +35,12 @@ static InterpretResult run()
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
 #define READ_CONSTANT_LONG() (vm.chunk->constants.values[READ_BYTE() | READ_BYTE() | READ_BYTE()])
-// BINARY_OP uses a block to ensure that have the same scope.
+// BINARY_OP uses a block to ensure that the statements executed have the same scope.
 // notice that in Lox, we define order of evaluation from left to right
 // so for example if we want to calculate expr_a + expr_b, we evaluate
 // first expr_a, push it on the stack, then evaluate expr_b and push it on the stack
-// so expr_a is actually popped() later, first-in-last-out order
-// also op like + isn't first class, but the C preprocessor only cares about text tokens
+// so expr_a is actually popped later, in a first-in-last-out order
+// also ops like + isn't first class, but the C preprocessor only cares about text tokens
 // not C language tokens
 #define BINARY_OP(op)        \
     {                        \
@@ -108,10 +109,9 @@ static InterpretResult run()
 #undef BINARY_OP
 }
 
-InterpretResult interpret(Chunk *chunk)
+InterpretResult interpret(const char *source)
 {
-    vm.chunk = chunk;
-    vm.ip = chunk->code;
+    compile(source);
 
-    return run();
+    return INTERPRET_OK;
 }
