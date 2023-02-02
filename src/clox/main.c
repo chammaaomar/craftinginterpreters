@@ -25,7 +25,7 @@ static char *read_file(const char *path)
     size_t file_size = ftell(file);
     rewind(file);
 
-    // reading file into buffer
+    // reading file into heap-allocated buffer
     char *buffer = (char *)malloc(file_size + 1);
     if (buffer == NULL)
     {
@@ -53,6 +53,8 @@ static void repl()
         printf("> ");
 
         if (!fgets(line, sizeof(line), stdin))
+        // doesn't handle multi-line inputs gracefully
+        // has hard-coded limit
         {
             printf("\n");
             break;
