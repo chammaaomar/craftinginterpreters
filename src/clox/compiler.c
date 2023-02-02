@@ -186,8 +186,10 @@ static void binary()
         break;
     case TOKEN_STAR:
         emit_byte(OP_MULTIPLY);
+        break;
     case TOKEN_SLASH:
         emit_byte(OP_DIVIDE);
+        break;
     default:
         return;
     }
