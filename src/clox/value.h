@@ -29,6 +29,7 @@ typedef struct
 
 #define IS_BOOL(value) ((value).type == VAL_BOOL)
 #define IS_NUMBER(value) ((value).type == VAL_NUMBER)
+#define IS_NIL(value) ((value).type == VAL_NIL)
 
 #define AS_BOOL(value) ((value).as.boolean)
 #define AS_NUMBER(value) ((value).as.number)
@@ -43,6 +44,7 @@ typedef struct
 void init_value_array(ValueArray *array);
 void write_value_array(ValueArray *array, Value value);
 void free_value_array(ValueArray *array);
+bool value_equals(Value a, Value b);
 
 void print_value(Value value);
 

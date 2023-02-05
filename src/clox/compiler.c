@@ -184,7 +184,7 @@ static void expression();
 // binary compiles a binary infix operator (+, -, *, /) and its right-hand-side operand
 // the left-hand-side operand has already been compiled and its value has been pushed
 // onto the stack, so this function only compiles the operator and r.h.s expression
-// the expression can be any expression involing higer-predence operators, since they "bind tigher"
+// the expression can be any expression involing higer-precedence operators, since they "bind tigher"
 static void binary()
 {
     TokenType operator_type = parser.previous.type;
@@ -210,6 +210,24 @@ static void binary()
     case TOKEN_SLASH:
         emit_byte(OP_DIVIDE);
         break;
+    case TOKEN_EQUAL:
+        emit_byte(OP_EQUAL);
+        break;
+    case TOKEN_GREATER:
+        emit_byte(OP_GREATER);
+        break;
+    case TOKEN_LESS:
+        emit_byte(OP_LESS);
+        break;
+    case TOKEN_BANG_EQUAL:
+        emit_bytes(OP_EQUAL, OP_NOT);
+        break;
+    case TOKEN_GREATER_EQUAL:
+        emit_bytes(OP_LESS, OP_NOT);
+        break;
+    case TOKEN_LESS_EQUAL:
+        emit_bytes(OP_GREATER, OP_NOT);
+        break;
     default:
         return;
     }
@@ -229,6 +247,9 @@ static void unary()
     {
     case TOKEN_MINUS:
         emit_byte(OP_NEGATE);
+        break;
+    case TOKEN_BANG:
+        emit_byte(OP_NOT);
         break;
     default:
         return;
@@ -258,14 +279,14 @@ ParseRule rules[] = {
     [TOKEN_SEMICOLON] = {NULL, NULL, PREC_NONE},
     [TOKEN_SLASH] = {NULL, binary, PREC_FACTOR},
     [TOKEN_STAR] = {NULL, binary, PREC_FACTOR},
-    [TOKEN_BANG] = {NULL, NULL, PREC_NONE},
-    [TOKEN_BANG_EQUAL] = {NULL, NULL, PREC_NONE},
-    [TOKEN_EQUAL] = {NULL, NULL, PREC_NONE},
-    [TOKEN_EQUAL_EQUAL] = {NULL, NULL, PREC_NONE},
-    [TOKEN_GREATER] = {NULL, NULL, PREC_NONE},
-    [TOKEN_GREATER_EQUAL] = {NULL, NULL, PREC_NONE},
-    [TOKEN_LESS] = {NULL, NULL, PREC_NONE},
-    [TOKEN_LESS_EQUAL] = {NULL, NULL, PREC_NONE},
+    [TOKEN_BANG] = {unary, NULL, PREC_NONE},
+    [TOKEN_BANG_EQUAL] = {NULL, binary, PREC_EQUALITY},
+    [TOKEN_EQUAL] = {NULL, binary, PREC_NONE},
+    [TOKEN_EQUAL_EQUAL] = {NULL, binary, PREC_EQUALITY},
+    [TOKEN_GREATER] = {NULL, binary, PREC_COMPARISON},
+    [TOKEN_GREATER_EQUAL] = {NULL, binary, PREC_COMPARISON},
+    [TOKEN_LESS] = {NULL, binary, PREC_COMPARISON},
+    [TOKEN_LESS_EQUAL] = {NULL, binary, PREC_COMPARISON},
     [TOKEN_IDENTIFIER] = {NULL, NULL, PREC_NONE},
     [TOKEN_STRING] = {NULL, NULL, PREC_NONE},
     [TOKEN_NUMBER] = {number, NULL, PREC_NONE},

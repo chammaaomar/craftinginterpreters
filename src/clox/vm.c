@@ -51,6 +51,11 @@ Value peek(int distance)
     return vm.stack_top[-1 - distance];
 }
 
+static bool is_falsey(Value value)
+{
+    return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
+}
+
 static InterpretResult run()
 {
 #define READ_BYTE() (*vm.ip++)
@@ -63,6 +68,7 @@ static InterpretResult run()
 // so expr_a is actually popped later, in a first-in-last-out order
 // also ops like + isn't first class, but the C preprocessor only cares about text tokens
 // not C language tokens
+// this macro only supports Lox numbers on the stack, but can return different Lox types
 #define BINARY_OP(value_Type, op)                       \
     {                                                   \
         if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) \
@@ -132,6 +138,9 @@ static InterpretResult run()
                 break;
             }
         }
+        case OP_NOT:
+            push(BOOL_VAL(is_falsey(pop())));
+            break;
         case OP_ADD:
             BINARY_OP(NUMBER_VAL, +)
             break;
@@ -143,6 +152,19 @@ static InterpretResult run()
             break;
         case OP_DIVIDE:
             BINARY_OP(NUMBER_VAL, /)
+            break;
+        case OP_EQUAL:
+        {
+            Value b = pop();
+            Value a = pop();
+            push(BOOL_VAL(value_equals(a, b)));
+            break;
+        }
+        case OP_GREATER:
+            BINARY_OP(BOOL_VAL, >);
+            break;
+        case OP_LESS:
+            BINARY_OP(BOOL_VAL, <);
             break;
         }
     }
