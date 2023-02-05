@@ -24,6 +24,7 @@ void init_vm()
 
 void free_vm()
 {
+    free_objects();
 }
 
 static void runtime_error(const char *format, ...)
