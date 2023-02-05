@@ -2,6 +2,7 @@
 
 #include "memory.h"
 #include "value.h"
+#include "object.h"
 
 void init_value_array(ValueArray *array)
 {
@@ -41,6 +42,9 @@ void print_value(Value value)
         break;
     case VAL_NIL:
         printf("nil");
+        break;
+    case VAL_OBJ:
+        print_object(value);
         break;
     }
 }
