@@ -215,7 +215,7 @@ static void binary()
     case TOKEN_SLASH:
         emit_byte(OP_DIVIDE);
         break;
-    case TOKEN_EQUAL:
+    case TOKEN_EQUAL_EQUAL:
         emit_byte(OP_EQUAL);
         break;
     case TOKEN_GREATER:
@@ -286,7 +286,7 @@ ParseRule rules[] = {
     [TOKEN_STAR] = {NULL, binary, PREC_FACTOR},
     [TOKEN_BANG] = {unary, NULL, PREC_NONE},
     [TOKEN_BANG_EQUAL] = {NULL, binary, PREC_EQUALITY},
-    [TOKEN_EQUAL] = {NULL, binary, PREC_NONE},
+    [TOKEN_EQUAL] = {NULL, NULL, PREC_NONE},
     [TOKEN_EQUAL_EQUAL] = {NULL, binary, PREC_EQUALITY},
     [TOKEN_GREATER] = {NULL, binary, PREC_COMPARISON},
     [TOKEN_GREATER_EQUAL] = {NULL, binary, PREC_COMPARISON},

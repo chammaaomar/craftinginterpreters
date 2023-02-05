@@ -251,6 +251,9 @@ Token scan_token()
     // since each call starts at a new token
     scanner.start = scanner.current;
 
+    if (is_at_end())
+        return make_token(TOKEN_EOF);
+
     char c = advance();
 
     if (is_alpha(c))
@@ -296,9 +299,6 @@ Token scan_token()
     case '"':
         return string();
     }
-
-    if (is_at_end())
-        return make_token(TOKEN_EOF);
 
     return error_token("Unexpected character.");
 }
