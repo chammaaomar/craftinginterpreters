@@ -15,6 +15,7 @@ typedef struct
     // stack_top points to the array element just past the top array element in the stack.
     // Thus we can indicate the stack is empty by pointing at 0
     Value *stack_top;
+    Obj *objects;
 } VM;
 
 typedef enum
@@ -25,6 +26,8 @@ typedef enum
     // VM detects runtime errors
     INTERPRET_RUNTIME_ERROR,
 } InterpretResult;
+
+extern VM vm;
 
 void init_vm();
 void free_vm();
