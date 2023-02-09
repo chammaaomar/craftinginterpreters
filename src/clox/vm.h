@@ -2,6 +2,7 @@
 #define clox_vm_h
 
 #include "chunk.h"
+#include "table.h"
 #include "value.h"
 
 #define STACK_MAX 256
@@ -16,6 +17,7 @@ typedef struct
     // Thus we can indicate the stack is empty by pointing at 0
     Value *stack_top;
     Obj *objects;
+    Table strings;
 } VM;
 
 typedef enum

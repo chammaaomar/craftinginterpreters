@@ -64,10 +64,10 @@ bool value_equals(Value a, Value b)
         return AS_NUMBER(a) == AS_NUMBER(b);
     case VAL_OBJ:
     {
-        ObjString *a_string = AS_STRING(a);
-        ObjString *b_string = AS_STRING(b);
-
-        return a_string->length == b_string->length && memcmp(a_string->chars, b_string->chars, a_string->length) == 0;
+        // the only objects we currently have are strings
+        // string interning gurantees that two identical strings
+        // are stored in one unique place in memory (in vm's internal hash table)
+        return AS_OBJ(a) == AS_OBJ(b);
     }
     default:
         return false;
