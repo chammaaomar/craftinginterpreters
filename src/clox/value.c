@@ -64,7 +64,7 @@ bool value_equals(Value a, Value b)
         return AS_NUMBER(a) == AS_NUMBER(b);
     case VAL_OBJ:
     {
-        // the only objects we currently have are strings
+        // the only objects we currently have are strings and all Lox strings are interned
         // string interning gurantees that two identical strings
         // are stored in one unique place in memory (in vm's internal hash table)
         return AS_OBJ(a) == AS_OBJ(b);
