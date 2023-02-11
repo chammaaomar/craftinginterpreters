@@ -232,7 +232,7 @@ static InterpretResult run()
             bool ok = table_get(&vm.globals, global_name, &global_value);
             if (!ok)
             {
-                runtime_error("Undefined variable '%s'.", global_name);
+                runtime_error("Undefined variable '%s'.", global_name->chars);
                 return INTERPRET_RUNTIME_ERROR;
             }
             push(global_value);
