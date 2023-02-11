@@ -62,6 +62,8 @@ int disassemble_instruction(Chunk *chunk, int offset)
     {
     case OP_RETURN:
         return simple_instruction("OP_RETURN", offset);
+    case OP_POP:
+        return simple_instruction("OP_POP", offset);
     case OP_CONSTANT:
         return constant_instruction("OP_CONSTANT", chunk, offset);
     case OP_NEGATE:
@@ -93,6 +95,8 @@ int disassemble_instruction(Chunk *chunk, int offset)
         return simple_instruction("OP_LESS", offset);
     case OP_PRINT:
         return simple_instruction("OP_PRINT", offset);
+    case OP_DEFINE_GLOBAL:
+        return constant_instruction("OP_DEFINE_GLOBAL", chunk, offset);
     default:
         printf("Unknown code %d\n", instruction);
         return offset + 1;

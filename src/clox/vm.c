@@ -21,10 +21,12 @@ void init_vm()
     reset_stack();
     vm.objects = NULL;
     init_table(&vm.strings);
+    init_table(&vm.globals);
 }
 
 void free_vm()
 {
+    free_table(&vm.globals);
     free_table(&vm.strings);
     free_objects();
 }
@@ -82,6 +84,7 @@ static InterpretResult run()
 {
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
+#define READ_STRING() (AS_STRING(READ_CONSTANT()))
 #define READ_CONSTANT_LONG() (vm.chunk->constants.values[READ_BYTE() | READ_BYTE() | READ_BYTE()])
 // BINARY_OP uses a block to ensure that the statements executed have the same scope.
 // notice that in Lox, we define order of evaluation from left to right
@@ -123,6 +126,13 @@ static InterpretResult run()
         case OP_RETURN:
         {
             return INTERPRET_OK;
+        }
+        case OP_POP:
+        {
+            // not useful thus far because our expressions don't have side effects
+            // function calls are examples of expressions with side effects
+            pop();
+            break;
         }
         case OP_CONSTANT:
         {
@@ -206,11 +216,21 @@ static InterpretResult run()
             print_value(pop());
             printf("\n");
             break;
+        case OP_DEFINE_GLOBAL:
+        {
+            ObjString *global_name = READ_STRING();
+            // we're doing peek(0) then pop() as opposed to just pop() for a reason
+            // regarding garbage collection that I don't really understand
+            table_set(&vm.globals, global_name, peek(0));
+            pop();
+            break;
+        }
         }
     }
 
 #undef READ_BYTE
 #undef READ_CONSTANT
+#undef READ_STRING
 #undef READ_CONSTANT_LONG
 #undef BINARY_OP
 }

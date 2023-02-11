@@ -293,18 +293,106 @@ static void print_statement()
     emit_byte(OP_PRINT);
 }
 
+// an expression statement evaluates an expression for its side effect, and discards its result
+// _i.e._, pops it off the stack, since statements must always leave the stack unchanged, with no additions
+// or deletions. An example of expression statements are function calls, since they produce values but it
+// can be discarded, and assignment expressions.
+static void expression_statement()
+{
+    expression();
+    consume(TOKEN_SEMICOLON, "Expect ';' after value.");
+    emit_byte(OP_POP);
+}
+
 static void statement()
 {
     if (match(TOKEN_PRINT))
     {
         print_statement();
     }
+    else
+    {
+        expression_statement();
+    }
+}
+
+// keep discarding tokens until we get to the next statement
+static void synchronize()
+{
+    parser.panic_mode = false;
+
+    while (parser.current.type != TOKEN_EOF)
+    {
+        if (parser.previous.type == TOKEN_SEMICOLON)
+        {
+            // done with error synchronization, since we reached a statement boundary
+            return;
+        }
+        switch (parser.current.type)
+        {
+        TOKEN_IF:
+        TOKEN_FOR:
+        TOKEN_WHILE:
+        TOKEN_CLASS:
+        TOKEN_FUN:
+        TOKEN_VAR:
+        TOKEN_PRINT:
+        TOKEN_RETURN:
+            return;
+        default:;
+            // do nothing, essentially discarding the tokens until we get to a statement boundary
+            // so we don't shotgun the user with cascading error messages that are mostly correlated and noisy
+        }
+        advance();
+    }
+}
+
+static uint8_t identifier_constant(Token *name)
+{
+    return make_constant(OBJ_VAL(copy_string(name->start, name->length)));
+}
+
+static uint8_t parse_variable(const char *error_msg)
+{
+    consume(TOKEN_IDENTIFIER, error_msg);
+    return identifier_constant(&parser.previous);
+}
+
+static void define_variable(uint8_t global)
+{
+    emit_bytes(OP_DEFINE_GLOBAL, global);
+}
+
+static void var_declaration()
+{
+    uint8_t global = parse_variable("Expect variable name.");
+
+    if (match(TOKEN_EQUAL))
+    {
+        expression();
+    }
+    else
+    {
+        emit_byte(OP_NIL);
+    }
+    consume(TOKEN_SEMICOLON, "Expect ';' after variable declaration.");
+    define_variable(global);
 }
 
 static void declaration()
 {
     // TODO: Add variable declaration
-    statement();
+    if (match(TOKEN_VAR))
+    {
+        var_declaration();
+    }
+    else
+    {
+        statement();
+    }
+
+    if (parser.panic_mode)
+        synchronize();
 }
 
 ParseRule rules[] = {
