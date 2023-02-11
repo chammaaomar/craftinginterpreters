@@ -122,8 +122,6 @@ static InterpretResult run()
         {
         case OP_RETURN:
         {
-            print_value(pop());
-            printf("\n");
             return INTERPRET_OK;
         }
         case OP_CONSTANT:
@@ -203,6 +201,10 @@ static InterpretResult run()
             break;
         case OP_LESS:
             BINARY_OP(BOOL_VAL, <);
+            break;
+        case OP_PRINT:
+            print_value(pop());
+            printf("\n");
             break;
         }
     }

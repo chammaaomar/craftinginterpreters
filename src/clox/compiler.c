@@ -119,6 +119,17 @@ static void emit_bytes(uint8_t byte1, uint8_t byte2)
     emit_byte(byte2);
 }
 
+static bool match(TokenType type)
+{
+    if (parser.current.type == type)
+    {
+        advance();
+        return true;
+    }
+
+    return false;
+}
+
 static void emit_return()
 {
     emit_byte(OP_RETURN);
@@ -185,6 +196,8 @@ static void literal()
 static ParseRule *get_rule(TokenType type);
 static void parse_precedence(Precedence precedence);
 static void expression();
+static void statement();
+static void declaration();
 
 // binary compiles a binary infix operator (+, -, *, /) and its right-hand-side operand
 // the left-hand-side operand has already been compiled and its value has been pushed
@@ -270,6 +283,28 @@ static void grouping()
 static void expression()
 {
     parse_precedence(PREC_ASSIGNMENT);
+}
+
+static void print_statement()
+{
+    // puts the result of evaluating the expression on the stack
+    expression();
+    consume(TOKEN_SEMICOLON, "Expect ';' after value.");
+    emit_byte(OP_PRINT);
+}
+
+static void statement()
+{
+    if (match(TOKEN_PRINT))
+    {
+        print_statement();
+    }
+}
+
+static void declaration()
+{
+    // TODO: Add variable declaration
+    statement();
 }
 
 ParseRule rules[] = {
@@ -358,8 +393,10 @@ bool compile(const char *source, Chunk *chunk)
     int line = -1;
 
     advance();
-    expression();
-    consume(TOKEN_EOF, "Expect end of expression.");
+    while (!match(TOKEN_EOF))
+    {
+        declaration();
+    }
     end_compiler();
 
     return !parser.had_error;

@@ -24,6 +24,7 @@ typedef enum
     OP_MULTIPLY,
     OP_DIVIDE,
     OP_RETURN,
+    OP_PRINT,
 } OpCode;
 
 // Chunk represents a clox program, which is a dynamic array of opcodes / bytecode instructions

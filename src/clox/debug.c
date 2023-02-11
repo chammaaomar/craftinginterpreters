@@ -91,6 +91,8 @@ int disassemble_instruction(Chunk *chunk, int offset)
         return simple_instruction("OP_GREATER", offset);
     case OP_LESS:
         return simple_instruction("OP_LESS", offset);
+    case OP_PRINT:
+        return simple_instruction("OP_PRINT", offset);
     default:
         printf("Unknown code %d\n", instruction);
         return offset + 1;
