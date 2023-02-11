@@ -321,6 +321,8 @@ static void print_statement()
 // _i.e._, pops it off the stack, since statements must always leave the stack unchanged, with no additions
 // or deletions. An example of expression statements are function calls, since they produce values but it
 // can be discarded, and assignment expressions.
+// It is important that a statement leaves the stack unchanged, i.e., with no net pops or pushes
+// because a program is made up of statements, and an long program shouldn't lead to a stack overflow
 static void expression_statement()
 {
     expression();
