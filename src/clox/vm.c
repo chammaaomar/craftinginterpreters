@@ -238,6 +238,21 @@ static InterpretResult run()
             push(global_value);
             break;
         }
+        case OP_SET_GLOBAL:
+        {
+            // assignment like x = 5 is an expression that evaluates to 5
+            // therefore we leave its value on the stack
+            ObjString *global_name = READ_STRING();
+            Value global_value = peek(0);
+            bool new_insertion = table_set(&vm.globals, global_name, global_value);
+            if (new_insertion)
+            {
+                table_delete(&vm.globals, global_name);
+                runtime_error("Undefined variable '%s'.", global_name->chars);
+                return INTERPRET_RUNTIME_ERROR;
+            }
+            break;
+        }
         }
     }
 

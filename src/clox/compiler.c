@@ -32,7 +32,7 @@ typedef enum
     PREC_PRIMARY     // literals and identifiers
 } Precedence;
 
-typedef void (*ParseFn)();
+typedef void (*ParseFn)(bool can_assign);
 
 typedef struct
 {
@@ -43,6 +43,12 @@ typedef struct
 
 Parser parser;
 Chunk *compiling_chunk;
+
+static ParseRule *get_rule(TokenType type);
+static void parse_precedence(Precedence precedence);
+static void expression();
+static void statement();
+static void declaration();
 
 static void error_at(Token *token, const char *message)
 {
@@ -168,29 +174,37 @@ static uint8_t identifier_constant(Token *name)
     return make_constant(OBJ_VAL(copy_string(name->start, name->length)));
 }
 
-static void number()
+static void number(bool can_assign)
 {
     double value = strtod(parser.previous.start, NULL);
     emit_constant(NUMBER_VAL(value));
 }
 
-static void string()
+static void string(bool can_assign)
 {
     emit_constant(OBJ_VAL(copy_string(parser.previous.start + 1, parser.previous.length - 2)));
 }
 
-static void named_variable(Token name)
+static void named_variable(Token name, bool can_assign)
 {
     uint8_t arg = identifier_constant(&name);
-    emit_bytes(OP_GET_GLOBAL, arg);
+    if (can_assign && match(TOKEN_EQUAL))
+    {
+        expression();
+        emit_bytes(OP_SET_GLOBAL, arg);
+    }
+    else
+    {
+        emit_bytes(OP_GET_GLOBAL, arg);
+    }
 }
 
-static void variable()
+static void variable(bool can_assign)
 {
-    named_variable(parser.previous);
+    named_variable(parser.previous, can_assign);
 }
 
-static void literal()
+static void literal(bool can_assign)
 {
     Token token = parser.previous;
     switch (token.type)
@@ -209,17 +223,11 @@ static void literal()
     }
 }
 
-static ParseRule *get_rule(TokenType type);
-static void parse_precedence(Precedence precedence);
-static void expression();
-static void statement();
-static void declaration();
-
 // binary compiles a binary infix operator (+, -, *, /) and its right-hand-side operand
 // the left-hand-side operand has already been compiled and its value has been pushed
 // onto the stack, so this function only compiles the operator and r.h.s expression
 // the expression can be any expression involing higer-precedence operators, since they "bind tigher"
-static void binary()
+static void binary(bool can_assign)
 {
     TokenType operator_type = parser.previous.type;
     ParseRule *rule = get_rule(operator_type);
@@ -267,7 +275,7 @@ static void binary()
     }
 }
 
-static void unary()
+static void unary(bool can_assign)
 {
     // we've already consumed the prefix unary operator, so it's in the previous token
     TokenType operator_type = parser.previous.type;
@@ -290,7 +298,7 @@ static void unary()
     }
 }
 
-static void grouping()
+static void grouping(bool can_assign)
 {
     expression();
     consume(TOKEN_RIGHT_PAREN, "Expect ')' after expression.");
@@ -469,14 +477,20 @@ static void parse_precedence(Precedence precedence)
         return;
     }
 
-    prefix_rule();
+    bool can_assign = precedence <= PREC_ASSIGNMENT;
+    prefix_rule(can_assign);
 
     while (precedence <= get_rule(parser.current.type)->precedence)
     {
         // compile tokens as long as they're of higher precedence or "bind tighter"
         advance();
         ParseFn infix_rule = get_rule(parser.previous.type)->infix;
-        infix_rule();
+        infix_rule(can_assign);
+    }
+
+    if (can_assign && match(TOKEN_EQUAL))
+    {
+        error("Invalid assignment target.");
     }
 }
 

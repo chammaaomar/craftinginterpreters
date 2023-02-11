@@ -28,6 +28,7 @@ typedef enum
     OP_POP,
     OP_DEFINE_GLOBAL,
     OP_GET_GLOBAL,
+    OP_SET_GLOBAL
 } OpCode;
 
 // Chunk represents a clox program, which is a dynamic array of opcodes / bytecode instructions
