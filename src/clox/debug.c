@@ -97,6 +97,8 @@ int disassemble_instruction(Chunk *chunk, int offset)
         return simple_instruction("OP_PRINT", offset);
     case OP_DEFINE_GLOBAL:
         return constant_instruction("OP_DEFINE_GLOBAL", chunk, offset);
+    case OP_GET_GLOBAL:
+        return constant_instruction("OP_GET_GLOBAL", chunk, offset);
     default:
         printf("Unknown code %d\n", instruction);
         return offset + 1;

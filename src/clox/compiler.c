@@ -163,6 +163,11 @@ static void emit_constant(Value value)
     emit_bytes(OP_CONSTANT, make_constant(value));
 }
 
+static uint8_t identifier_constant(Token *name)
+{
+    return make_constant(OBJ_VAL(copy_string(name->start, name->length)));
+}
+
 static void number()
 {
     double value = strtod(parser.previous.start, NULL);
@@ -172,6 +177,17 @@ static void number()
 static void string()
 {
     emit_constant(OBJ_VAL(copy_string(parser.previous.start + 1, parser.previous.length - 2)));
+}
+
+static void named_variable(Token name)
+{
+    uint8_t arg = identifier_constant(&name);
+    emit_bytes(OP_GET_GLOBAL, arg);
+}
+
+static void variable()
+{
+    named_variable(parser.previous);
 }
 
 static void literal()
@@ -347,11 +363,6 @@ static void synchronize()
     }
 }
 
-static uint8_t identifier_constant(Token *name)
-{
-    return make_constant(OBJ_VAL(copy_string(name->start, name->length)));
-}
-
 static uint8_t parse_variable(const char *error_msg)
 {
     consume(TOKEN_IDENTIFIER, error_msg);
@@ -415,7 +426,7 @@ ParseRule rules[] = {
     [TOKEN_GREATER_EQUAL] = {NULL, binary, PREC_COMPARISON},
     [TOKEN_LESS] = {NULL, binary, PREC_COMPARISON},
     [TOKEN_LESS_EQUAL] = {NULL, binary, PREC_COMPARISON},
-    [TOKEN_IDENTIFIER] = {NULL, NULL, PREC_NONE},
+    [TOKEN_IDENTIFIER] = {variable, NULL, PREC_NONE},
     [TOKEN_STRING] = {string, NULL, PREC_NONE},
     [TOKEN_NUMBER] = {number, NULL, PREC_NONE},
     [TOKEN_AND] = {NULL, NULL, PREC_NONE},
