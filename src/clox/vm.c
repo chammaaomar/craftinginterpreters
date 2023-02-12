@@ -254,6 +254,22 @@ static InterpretResult run()
             }
             break;
         }
+        case OP_GET_LOCAL:
+        {
+            uint8_t slot = READ_BYTE();
+            // it's already on the stack, but we have to push it to the top of the stack
+            // since all the other instructions assume their operands are at the top of the stack
+            push(vm.stack[slot]);
+            break;
+        }
+        case OP_SET_LOCAL:
+        {
+            uint8_t slot = READ_BYTE();
+            // don't pop off the stack, because assignment is an expression, and that expression
+            // evaluates to the right hand side of the assignment, so we keep it on the stack
+            vm.stack[slot] = peek(0);
+            break;
+        }
         }
     }
 

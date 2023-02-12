@@ -207,18 +207,54 @@ static void string(bool can_assign)
     emit_constant(OBJ_VAL(copy_string(parser.previous.start + 1, parser.previous.length - 2)));
 }
 
+static int resolve_local(Compiler *compiler, Token *name)
+{
+    // we walk starting from "last in" so that local variables shadow
+    // variables from the surrounding scope
+    for (int i = current->local_count - 1; i >= 0; i--)
+    {
+        Local *local = &current->locals[i];
+        if (identifiers_equal(&local->name, name))
+        {
+            if (local->depth == -1)
+            {
+                error("Can't read a local variable in its own initializer.");
+            }
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 static void named_variable(Token name, bool can_assign)
 {
-    uint8_t arg = identifier_constant(&name);
+    uint8_t get_op, set_op;
+    // the operand in the case of local variable expression or local variable assignment
+    // is just the index into the compiler stack, which due to the structure of the language
+    // is precisely the index into the VM's runtime stack.
+    int arg = resolve_local(current, &name);
+
+    if (arg != -1)
+    {
+        get_op = OP_GET_LOCAL;
+        set_op = OP_SET_LOCAL;
+    }
+    else
+    {
+        arg = identifier_constant(&name);
+        get_op = OP_GET_GLOBAL;
+        set_op = OP_SET_GLOBAL;
+    }
     if (can_assign && match(TOKEN_EQUAL))
     {
         expression();
-        emit_bytes(OP_SET_GLOBAL, arg);
+        emit_bytes(get_op, (uint8_t)arg);
     }
     else
     {
         // global variables are late-bound, i.e., resolved at runtime, not compile time
-        emit_bytes(OP_GET_GLOBAL, arg);
+        emit_bytes(set_op, (uint8_t)arg);
     }
 }
 
@@ -438,7 +474,7 @@ static void add_local(Token name)
     }
     Local local = current->locals[current->local_count++];
     local.name = name;
-    local.depth = current->scope_depth;
+    local.depth = -1;
 }
 
 static bool identifiers_equal(Token *a, Token *b)
@@ -485,15 +521,25 @@ static uint8_t parse_variable(const char *error_msg)
     return identifier_constant(&parser.previous);
 }
 
+static void mark_initialized()
+{
+    current->locals[current->local_count - 1].depth = current->scope_depth;
+}
+
 static void define_variable(uint8_t global)
 {
     if (current->scope_depth > 0)
+    {
+        // mark the variable as available for use
+        mark_initialized();
         return;
+    }
     emit_bytes(OP_DEFINE_GLOBAL, global);
 }
 
 static void var_declaration()
 {
+    // add the variable to the scope (whether local variable or global variable)
     uint8_t global = parse_variable("Expect variable name.");
 
     if (match(TOKEN_EQUAL))
