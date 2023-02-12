@@ -247,6 +247,7 @@ static InterpretResult run()
             bool new_insertion = table_set(&vm.globals, global_name, global_value);
             if (new_insertion)
             {
+                // Lox doesn't support implicit declaration
                 table_delete(&vm.globals, global_name);
                 runtime_error("Undefined variable '%s'.", global_name->chars);
                 return INTERPRET_RUNTIME_ERROR;

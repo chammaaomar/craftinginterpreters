@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "compiler.h"
 #include "scanner.h"
@@ -41,7 +42,21 @@ typedef struct
     Precedence precedence;
 } ParseRule;
 
+typedef struct
+{
+    Token name;
+    int depth;
+} Local;
+
+typedef struct
+{
+    Local locals[UINT8_COUNT];
+    int local_count;
+    int scope_depth;
+} Compiler;
+
 Parser parser;
+Compiler *current = NULL;
 Chunk *compiling_chunk;
 
 static ParseRule *get_rule(TokenType type);
@@ -152,6 +167,13 @@ static void end_compiler()
     emit_return();
 }
 
+static void init_compiler(Compiler *compiler)
+{
+    compiler->local_count = 0;
+    compiler->scope_depth = 0;
+    current = compiler;
+}
+
 static uint8_t make_constant(Value value)
 {
     int constant = add_constant_to_chunk(compiling_chunk, value);
@@ -195,6 +217,7 @@ static void named_variable(Token name, bool can_assign)
     }
     else
     {
+        // global variables are late-bound, i.e., resolved at runtime, not compile time
         emit_bytes(OP_GET_GLOBAL, arg);
     }
 }
@@ -330,11 +353,44 @@ static void expression_statement()
     emit_byte(OP_POP);
 }
 
+static void begin_scope()
+{
+    current->scope_depth++;
+}
+
+static void end_scope()
+{
+    while (current->local_count > 0 && current->locals[current->local_count - 1].depth == current->scope_depth)
+    {
+        // local variables are stored on the VM stack, not in the globals hash table, so we need to clear them
+        emit_byte(OP_POP);
+        current->local_count--;
+    }
+    current->scope_depth--;
+}
+
+static void block()
+{
+    while (parser.current.type != TOKEN_RIGHT_BRACE && parser.current.type != TOKEN_EOF)
+    {
+        declaration();
+    }
+
+    consume(TOKEN_RIGHT_BRACE, "Expect '}' after block.");
+}
+
 static void statement()
 {
     if (match(TOKEN_PRINT))
     {
         print_statement();
+    }
+    else if (match(TOKEN_LEFT_BRACE))
+    {
+        // blocks and functions create local scope
+        begin_scope();
+        block();
+        end_scope();
     }
     else
     {
@@ -373,14 +429,66 @@ static void synchronize()
     }
 }
 
+static void add_local(Token name)
+{
+    if (current->local_count == UINT8_COUNT)
+    {
+        error("Only a maximum of 256 local variables is supported.");
+        return;
+    }
+    Local local = current->locals[current->local_count++];
+    local.name = name;
+    local.depth = current->scope_depth;
+}
+
+static bool identifiers_equal(Token *a, Token *b)
+{
+    if (a->length != b->length)
+        return false;
+    return memcmp(a->start, b->start, a->length) == 0;
+}
+
+static void declare_variable()
+{
+    if (current->scope_depth == 0)
+        return;
+    Token *name = &parser.previous;
+    for (int i = current->local_count - 1; i >= 0; i--)
+    {
+        Local *local = &current->locals[i];
+        if (local->depth != -1 && local->depth < current->scope_depth)
+        {
+            // we've excited into the surrouding scope, and Lox supports variable shadowing
+            // since scopes and their local variables are pushed unto the stack
+            // so all variables of lower index are from the surrounding scope
+            break;
+        }
+
+        if (identifiers_equal(&local->name, name))
+        {
+            error("A variable with this name already exists in the same scope.");
+        }
+    }
+    add_local(*name);
+}
+
 static uint8_t parse_variable(const char *error_msg)
 {
     consume(TOKEN_IDENTIFIER, error_msg);
+
+    // local variable, we don't store these in the constants table
+    // since at runtime, local variables aren't looked up by name
+    // instead, they're looked up by their position in the VM stack
+    declare_variable();
+    if (current->scope_depth > 0)
+        return 0;
     return identifier_constant(&parser.previous);
 }
 
 static void define_variable(uint8_t global)
 {
+    if (current->scope_depth > 0)
+        return;
     emit_bytes(OP_DEFINE_GLOBAL, global);
 }
 
@@ -499,6 +607,9 @@ static void parse_precedence(Precedence precedence)
 bool compile(const char *source, Chunk *chunk)
 {
     init_scanner(source);
+
+    Compiler compiler;
+    init_compiler(&compiler);
 
     compiling_chunk = chunk;
 
